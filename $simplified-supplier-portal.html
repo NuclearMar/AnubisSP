@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supplier Portal - Anubis</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap');
+    
+    :root {
+      /* Thoth-Works color scheme */
+      --bg-primary: #0f1620;
+      --bg-secondary: #1a2433;
+      --bg-tertiary: #24303f;
+      --text-primary: #e6e6e6;
+      --text-secondary: #a0a8b5;
+      --accent-primary: #61afef;
+      --accent-secondary: #c678dd;
+      --success: #98c379;
+      --warning: #e5c07b;
+      --danger: #e06c75;
+      --border-color: #2c3e50;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+    
+    header {
+      background-color: var(--bg-secondary);
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--accent-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .header-menu {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .header-menu a {
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+    
+    .header-menu a:hover {
+      color: var(--accent-primary);
+    }
+    
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+    
+    .page-title {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--accent-primary);
+    }
+    
+    .tab-navigation {
+      display: flex;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 1.5rem;
+    }
+    
+    .tab-button {
+      padding: 0.5rem 1rem;
+      border: none;
+      background: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 1rem;
+      position: relative;
+    }
+    
+    .tab-button.active {
+      color: var(--accent-primary);
+    }
+    
+    .tab-button.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: var(--accent-primary);
+    }
+    
+    .card {
+      background-color: var(--bg-secondary);
+      border-radius: 6px;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+    }
+    
+    .card-header {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .card-title {
+      font-size: 1.1rem;
+      color: var(--accent-primary);
+    }
+    
+    .card-body {
+      padding: 1rem;
+    }
+    
+    .grid-3col {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .stat-card {
+      background-color: var(--bg-tertiary);
+      padding: 1rem;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+    }
+    
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+    
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .btn {
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .btn-primary {
+      background-color: var(--accent-primary);
+      color: var(--bg-primary);
+      border: none;
+    }
+    
+    .btn-primary:hover {
+      background-color: #4d96d1;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    th {
+      text-align: left;
+      padding: 0.75rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    td {
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+    }
+    
+    .status-pending {
+      background-color: rgba(229, 192, 123, 0.1);
+      color: var(--warning);
+      border: 1px solid rgba(229, 192, 123, 0.3);
+    }
+    
+    .status-approved {
+      background-color: rgba(152, 195, 121, 0.1);
+      color: var(--success);
+      border: 1px solid rgba(152, 195, 121, 0.3);
+    }
+    
+    .status-rejected {
+      background-color: rgba(224, 108, 117, 0.1);
+      color: var(--danger);
+      border: 1px solid rgba(224, 108, 117, 0.3);
+    }
+    
+    .upload-area {
+      border: 2px dashed var(--border-color);
+      border-radius: 6px;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    
+    .upload-icon {
+      font-size: 2rem;
+      color: var(--accent-primary);
+      margin-bottom: 0.5rem;
+    }
+    
+    .document-list {
+      list-style: none;
+    }
+    
+    .document-item {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .document-item:last-child {
+      border-bottom: none;
+    }
+    
+    .document-icon {
+      width: 2rem;
+      height: 2rem;
+      background-color: rgba(97, 175, 239, 0.1);
+      color: var(--accent-primary);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 0.75rem;
+    }
+    
+    .document-info {
+      flex-grow: 1;
+    }
+    
+    .document-name {
+      font-weight: 500;
+    }
+    
+    .document-date {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+    
+    .document-status {
+      margin-left: 1rem;
+    }
+    
+    /* Tab content */
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    @media (max-width: 768px) {
+      .grid-3col {
+        grid-template-columns: 1fr;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+      }
+      
+      .tab-navigation {
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <i class="fas fa-atom"></i> Anubis
+    </div>
+    <div class="header-menu">
+      <a href="#"><i class="fas fa-user"></i> Profile</a>
+      <a href="#"><i class="fas fa-bell"></i> Notifications</a>
+      <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+  </header>
+  
+  <main>
+    <h1 class="page-title">Supplier Portal</h1>
+    
+    <div class="tab-navigation">
+      <button class="tab-button active" data-tab="dashboard">Dashboard</button>
+      <button class="tab-button" data-tab="documents">Documents</button>
+      <button class="tab-button" data-tab="rfis">RFIs</button>
+      <button class="tab-button" data-tab="onboarding">Onboarding</button>
+    </div>
+    
+    <!-- Dashboard Tab -->
+    <div id="dashboard" class="tab-content active">
+      <div class="grid-3col">
+        <div class="stat-card">
+          <div class="stat-label">Pending RFIs</div>
+          <div class="stat-value">3</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Document Status</div>
+          <div class="stat-value">12/15</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Certification</div>
+          <div class="stat-value">Active</div>
+        </div>
+      </div>
+      
+      <div class="action-buttons">
+        <button class="btn btn-primary"><i class="fas fa-file-upload"></i> Upload Document</button>
+        <button class="btn btn-primary"><i class="fas fa-reply"></i> Respond to RFIs</button>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Recent Activity</div>
+        </div>
+        <div class="card-body">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Activity</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Mar 29, 2025</td>
+                <td>Uploaded Quality Manual v3.2</td>
+                <td><span class="status-badge status-pending">Under Review</span></td>
+              </tr>
+              <tr>
+                <td>Mar 28, 2025</td>
+                <td>Responded to RFI-2025-072</td>
+                <td><span class="status-badge status-pending">Pending</span></td>
+              </tr>
+              <tr>
+                <td>Mar 25, 2025</td>
+                <td>ASME Section III Certificate</td>
+                <td><span class="status-badge status-approved">Approved</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Documents Tab -->
+    <div id="documents" class="tab-content">
+      <div class="action-buttons">
+        <button class="btn btn-primary"><i class="fas fa-file-upload"></i> Upload New Document</button>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Upload Document</div>
+        </div>
+        <div class="card-body">
+          <div class="upload-area">
+            <div class="upload-icon">
+              <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <div>Drag and drop files here or click to browse</div>
+            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem;">
+              Max file size: 50MB. Supported formats: PDF, DOC, DOCX, XLS, XLSX
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Documents</div>
+        </div>
+        <div class="card-body">
+          <ul class="document-list">
+            <li class="document-item">
+              <div class="document-icon">
+                <i class="fas fa-file-pdf"></i>
+              </div>
+              <div class="document-info">
+                <div class="document-name">Quality Manual v3.2</div>
+                <div class="document-date">Uploaded: Mar 29, 2025</div>
+              </div>
+              <div class="document-status">
+                <span class="status-badge status-pending">Under Review</span>
+              </div>
+            </li>
+            <li class="document-item">
+              <div class="document-icon">
+                <i class="fas fa-file-pdf"></i>
+              </div>
+              <div class="document-info">
+                <div class="document-name">ASME Section III Certificate</div>
+                <div class="document-date">Uploaded: Mar 25, 2025</div>
+              </div>
+              <div class="document-status">
+                <span class="status-badge status-approved">Approved</span>
+              </div>
+            </li>
+            <li class="document-item">
+              <div class="document-icon">
+                <i class="fas fa-file-excel"></i>
+              </div>
+              <div class="document-info">
+                <div class="document-name">Manufacturing Capability Matrix</div>
+                <div class="document-date">Uploaded: Mar 20, 2025</div>
+              </div>
+              <div class="document-status">
+                <span class="status-badge status-approved">Approved</span>
+              </div>
+            </li>
+            <li class="document-item">
+              <div class="document-icon">
+                <i class="fas fa-file-pdf"></i>
+              </div>
+              <div class="document-info">
+                <div class="document-name">NQA-1 Compliance Procedures</div>
+                <div class="document-date">Uploaded: Mar 15, 2025</div>
+              </div>
+              <div class="document-status">
+                <span class="status-badge status-approved">Approved</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <!-- RFIs Tab -->
+    <div id="rfis" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Open RFIs</div>
+        </div>
+        <div class="card-body">
+          <table>
+            <thead>
+              <tr>
+                <th>RFI #</th>
+                <th>Subject</th>
+                <th>Due Date</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>RFI-2025-089</td>
+                <td>Safety Valve Testing Documentation</td>
+                <td>Apr 5, 2025</td>
+                <td><span class="status-badge status-pending">Pending</span></td>
+                <td><a href="#" style="color: var(--accent-primary);">Respond</a></td>
+              </tr>
+              <tr>
+                <td>RFI-2025-076</td>
+                <td>Material Certification for SS316</td>
+                <td>Apr 8, 2025</td>
+                <td><span class="status-badge status-pending">Pending</span></td>
+                <td><a href="#" style="color: var(--accent-primary);">Respond</a></td>
+              </tr>
+              <tr>
+                <td>RFI-2025-072</td>
+                <td>Pressure Testing Procedures</td>
+                <td>Apr 12, 2025</td>
+                <td><span class="status-badge status-pending">Pending</span></td>
+                <td><a href="#" style="color: var(--accent-primary);">Respond</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Onboarding Tab -->
+    <div id="onboarding" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Onboarding Checklist</div>
+        </div>
+        <div class="card-body">
+          <div style="margin-bottom: 1rem;">Progress: 12/15 items completed</div>
+          
+          <table>
+            <thead>
+              <tr>
+                <th>Requirement</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Company Information</td>
+                <td><span class="status-badge status-approved">Complete</span></td>
+                <td><a href="#" style="color: var(--accent-primary);">View</a></td>
+              </tr>
+              <tr>
+                <td>Quality Management System</td>
+                <td><span class="status-badge status-approved">Complete</span></td>
+                <td><a href="#" style="color: var(--accent-primary);">View</a></td>
+              </tr>
+              <tr>
+                <td>Safety Certifications</td>
+                <td><span class="status-badge status-approved">Complete</span></td>
+                <td><a href="#" style="color: var(--accent-primary);">View</a></td>
+              </tr>
+              <tr>
+                <td>Nuclear Liability Insurance</td>
+                <td><span class="status-badge status-pending">Pending</span></td>
+                <td><a href="#" style="color: var(--accent-primary);">Submit</a></td>
+              </tr>
+              <tr>
+                <td>Cyber Security Protocol</td>
+                <td><span class="status-badge status-pending">Pending</span></td>
+                <td><a href="#" style="color: var(--accent-primary);">Submit</a></td>
+              </tr>
+              <tr>
+                <td>Environmental Compliance</td>
+                <td><span class="status-badge status-pending">Pending</span></td>
+                <td><a href="#" style="color: var(--accent-primary);">Submit</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <script>
+    // Simple tab navigation
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // Remove active class from all buttons and contents
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+        
+        // Add active class to clicked button and corresponding content
+        button.classList.add('active');
+        const tabId = button.getAttribute('data-tab');
+        document.getElementById(tabId).classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
